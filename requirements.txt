@@ -1,0 +1,4 @@
+django_heroku
+django==3
+requests
+gunicorn
