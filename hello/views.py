@@ -10,7 +10,7 @@ def index(request):
     # return render(request, "index.html")
     #r = requests.get('http://httpbin.org/status/418')
     #print(r.text)
-    return HttpResponse('<p>'+ "Hello World  From -----> medusa" + '</p>')
+    return HttpResponse('<p>'+ "Hello World" + '</p>')
 
 def db(request):
 
