@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "hello",
+    "core.apps.CoreConfig"
 ]
 
 MIDDLEWARE = [
@@ -53,6 +54,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "docbook.urls"
+
+AUTH_USER_MODEL = 'core.User'
 
 TEMPLATES = [
     {
