@@ -1,1 +1,1 @@
-web: gunicorn herokutest.wsgi
+web: gunicorn docbook.wsgi
