@@ -3,3 +3,4 @@ django==3
 requests
 gunicorn
 whitenoise
+django-rest-framework
