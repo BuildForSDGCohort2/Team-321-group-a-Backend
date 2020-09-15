@@ -1,1 +1,1 @@
-web: gunicorn docbook.wsgi --log-file -
+web: gunicorn docbook.wsgi
