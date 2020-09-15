@@ -1,1 +1,1 @@
-web: gunicorn docbook.wsgi
+web: gunicorn Docbook.wsgi
