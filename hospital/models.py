@@ -42,4 +42,20 @@ class Doctor(models.Model):
     hospital = models.ManyToManyField(Hospital)
     description = models.TextField()
 
+    def __str__(self):
+        return f'{self.user}'
 
+class Appointment(models.Model):
+
+    VENUE_LIST = [
+        ('A', 'Hospital'),
+        ('B', 'Home'),
+        ('C', 'Onlinee')
+    ]
+
+    venue = models.CharField(max_length=2,choices=VENUE_LIST, default='H',  help_text="The venue for appointment")
+    start_time = models.DateField()
+    end_time = models.DateField()
+    Aim = models.TextField()
+    user_doctor = models.ForeignKey(Doctor, help_text="Choose the doctor", on_delete=models.CASCADE, null=True, blank=True)
+    user_specialist = models.ForeignKey(Specialist, help_text="Choose the Specialist", on_delete=models.CASCADE, null=True, blank=True)

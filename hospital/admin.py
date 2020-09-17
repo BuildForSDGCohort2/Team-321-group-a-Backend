@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Hospital, Specialist, Doctor
+from .models import User, Hospital, Specialist, Doctor, Appointment
 
 # Register your models here.
 
@@ -19,3 +19,7 @@ admin.site.register(Specialist,SpecialistAdmin)
 class HospitalAdmin(admin.ModelAdmin):
     list_display = ('hospital_name','Address')
 admin.site.register(Hospital, HospitalAdmin)
+
+class AppointmentAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Appointment,AppointmentAdmin )
