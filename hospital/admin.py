@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Hospital, Specialist, Doctor, Appointment, Payment
+from .models import User, Hospital, Specialist, Doctor, Appointment, Payment, SpecialistType
 
 # Register your models here.
 
@@ -18,7 +18,7 @@ admin.site.register(User, UserAdmin)
 
 class SpecialistAdmin(admin.ModelAdmin):
     list_display = ('user','description')
-    list_filter = ('hospital',)
+    #list_filter = ('hospital',)
 admin.site.register(Specialist,SpecialistAdmin)
 
 class DoctorAdmin(admin.ModelAdmin):
@@ -45,7 +45,7 @@ class AppointmentAdmin(admin.ModelAdmin):
     list_filter = ('venue','start_time','end_time',)
     search_fields = ('venue',)
 
-    #def user_req(self, obj):
+    #def user_req(self, obj):s
     #    return obj.user.user_type
 
 admin.site.register(Appointment,AppointmentAdmin )
@@ -56,3 +56,9 @@ class PaymmentAdmin(admin.ModelAdmin):
     list_editable = ('Account_number',)
     search_fields = ('Account_name',)
 admin.site.register(Payment, PaymmentAdmin)
+
+class SpecialistTypeAdmin(admin.ModelAdmin):
+    list_display = ('specialist_type','specialist_category')
+    #list_editable = ('specialist_type',)
+
+admin.site.register(SpecialistType, SpecialistTypeAdmin) 
