@@ -13,6 +13,8 @@ router.register(r'doctors', views.DoctorView, 'doctor')
 router.register(r'users', views.UserView,'user')
 router.register(r'appointment', views.AppointmentView, 'appointment')
 router.register(r'payment', views.PaymentView, 'payment')
+router.register(r'company', views.CompanyView, 'company')
+router.register(r'specialist_type', views.SpecialistTypeView, 'specialist_type')
 
 
 urlpatterns = [
