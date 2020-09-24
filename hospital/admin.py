@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Hospital, Specialist, Doctor, Appointment, Payment, SpecialistType
+from .models import User, Hospital, Specialist, Doctor, Appointment, Payment, SpecialistType, Company
 
 # Register your models here.
 
@@ -60,5 +60,8 @@ admin.site.register(Payment, PaymmentAdmin)
 class SpecialistTypeAdmin(admin.ModelAdmin):
     list_display = ('specialist_type','specialist_category')
     #list_editable = ('specialist_type',)
-
 admin.site.register(SpecialistType, SpecialistTypeAdmin) 
+
+class CompanyAdmin(admin.ModelAdmin):
+    list_display = ('company_name',)
+admin.site.register(Company, CompanyAdmin)

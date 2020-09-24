@@ -4,3 +4,4 @@ requests
 gunicorn
 whitenoise
 django-rest-framework
+django_extensions
