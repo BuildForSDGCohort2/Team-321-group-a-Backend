@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Hospital, Specialist, Doctor, Appointment, Payment, SpecialistType, Company
+from .models import User, Hospital, Specialist, Appointment, Payment, SpecialistType, Company, Wallet
 
 # Register your models here.
 
@@ -9,19 +9,19 @@ from .models import User, Hospital, Specialist, Doctor, Appointment, Payment, Sp
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('first_name','last_name','date_of_birth','gender')
+    list_display = ('username','first_name','last_name','date_of_birth','gender')
     search_fields = ('first_name',)
     list_filter = ('date_of_birth',)
-    list_display_links = ('first_name', 'last_name','date_of_birth',)
+    list_display_links = ('username', 'first_name', 'last_name','date_of_birth',)
     #list_editable = ('date_of_birth', 'first_name','last_name',)
 admin.site.register(User, UserAdmin)
 
-class SpecialistAdmin(admin.ModelAdmin):
-    list_display = ('user','description')
+# class SpecialistAdmin(admin.ModelAdmin):
+#     list_display = ('user','description')
     #list_filter = ('hospital',)
-admin.site.register(Specialist,SpecialistAdmin)
+# admin.site.register(Specialist,SpecialistAdmin)
 
-class DoctorAdmin(admin.ModelAdmin):
+class SpecialistAdmin(admin.ModelAdmin):
     list_display = ('user', 'description','hospital_name')
     #list_filter = ('hospital_name',)
     search_fields = ('user',)
@@ -30,7 +30,7 @@ class DoctorAdmin(admin.ModelAdmin):
     def hospital_name(self, obj):
         return obj.hospital.hospital_name
 
-admin.site.register(Doctor, DoctorAdmin)
+admin.site.register(Specialist, SpecialistAdmin)
 
 class HospitalAdmin(admin.ModelAdmin):
     list_display = ('hospital_name','Address')
@@ -40,8 +40,8 @@ class HospitalAdmin(admin.ModelAdmin):
 admin.site.register(Hospital, HospitalAdmin)
 
 class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ('venue','user_name', 'user_doctor','user_specialist','start_time','end_time')
-    list_editable = ('start_time','end_time','user_specialist',)
+    list_display = ('venue','user_name', 'specialist', 'day', 'start_time','end_time')
+    list_editable = ('start_time','end_time')
     list_filter = ('venue','start_time','end_time',)
     search_fields = ('venue',)
 
@@ -65,3 +65,12 @@ admin.site.register(SpecialistType, SpecialistTypeAdmin)
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ('company_name',)
 admin.site.register(Company, CompanyAdmin)
+
+class WalletAdmin(admin.ModelAdmin):
+    list_display = ('balance','user_name')
+    
+
+    def user_name(self, obj):
+        return obj.user.username
+
+admin.site.register(Wallet, WalletAdmin)

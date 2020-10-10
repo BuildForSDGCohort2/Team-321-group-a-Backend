@@ -2,6 +2,10 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils import timezone
+
 
 class Payment(models.Model):
     ACCOUNT_TYPE_CHOICES = [
@@ -28,17 +32,17 @@ class Company(models.Model):
 
 class User(AbstractUser):
     USER_TYPE_CHOICES = (
-      (1, 'patient'),
-      (2, 'specialist'),
-      (3, 'doctor'),
-      (4, 'admin'),
-      (5, 'technician'),
+      ('patient', 'patient'),
+      ('specialist', 'specialist'),
+      ('doctor', 'doctor'),
+      ('admin', 'admin'),
+      ('technician', 'technician'),
   )
     SEX_CHOICES = [
         ('M', 'Male'),
         ('F', 'Female')
     ]
-    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=1)
+    user_type = models.CharField(max_length=10,  default='patient')
     gender = models.CharField(max_length=2, help_text="Enter gender", choices=SEX_CHOICES)
     date_of_birth = models.DateField(help_text="Enter the date of birth", null=True,blank=True)
     date_of_death  = models.DateField(help_text="Enter the date of death", null=True, blank=True)
@@ -46,9 +50,24 @@ class User(AbstractUser):
     Image = models.ImageField(upload_to='user-images', blank=True, null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, blank=True, null=True)
     account = models.ForeignKey(Payment, on_delete=models.CASCADE, help_text="The account details", blank=True, null=True)
+    phone_number = models.CharField(max_length=15, default='+234')
 
+    # print('from the model', user_type)
     def __str__(self):
         return self.username
+    # def get_role(self):
+    #     role = self.user_type
+    #     print('role', role )
+    #     return role
+    # print('in the model class', get_role)
+
+class Wallet(models.Model):
+    user_id = models.OneToOneField(User, on_delete=models.CASCADE, help_text="An id of the user")
+    balance = models.IntegerField(help_text="The balance")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user_id, self.balance
 
 class Hospital(models.Model):
     hospital_name = models.CharField(max_length=100)
@@ -79,10 +98,10 @@ class Specialist(models.Model):
     def __str__(self):
         return f'{self.user}'
 
-class Doctor(models.Model):
+class Specialist(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    hospital = models.ManyToManyField(Hospital)
-    description = models.TextField()
+    hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE, default=1, blank = True)
+    description = models.TextField(blank=True)
 
     def __str__(self):
         return f'{self.user}'
@@ -96,18 +115,40 @@ class Appointment(models.Model):
     ]
 
     VENUE_LIST = [
-        ('A', 'Hospital'),
-        ('B', 'Home'),
-        ('C', 'Online')
+        ('Hospital', 'Hospital'),
+        ('Home', 'Home'),
+        ('Online', 'Online')
     ]
-    user_name = models.ForeignKey(User, on_delete=models.CASCADE,blank=True, null=True)
-    venue = models.CharField(max_length=2,choices=VENUE_LIST, default='H',  help_text="The venue for appointment")
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    user_name = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    venue = models.CharField(max_length=15,choices=VENUE_LIST, default='Hospital',  help_text="The venue for appointment")
+    day = models.DateField(default=timezone.now)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
     Aim = models.TextField()
     alert = models.CharField(max_length=2, choices=ALLERT_TYPE, help_text="Choose the type of alert", blank=True, null=True)
-    user_doctor = models.ForeignKey(Doctor, help_text="Choose the doctor", on_delete=models.CASCADE, null=True, blank=True)
-    user_specialist = models.ForeignKey(Specialist, help_text="Choose the Specialist", on_delete=models.CASCADE, null=True, blank=True)
+    specialist = models.ForeignKey(Specialist, help_text="Choose the doctor", on_delete=models.CASCADE, null=True, blank=True)
+    # user_specialist = models.ForeignKey(Specialist, help_text="Choose the Specialist", on_delete=models.CASCADE, null=True, blank=True)
+    # acceptance = models.BooleanField(default=False, blank=True)
+    # reschedule_startime = models.DateTimeField(blank=True, default=timezone.now)
+    # reschedule_endtime = models.DateTimeField(blank=True, default=timezone.now)
 
     def __str__(self):
-        return self.venue
+        return f'{self.specialist} {self.venue}'
+# user_1 = User
+# print('printing stuffs ', get_role)
+
+# if User.objects.get(user_type = instance) == 'doctor':
+#     print('it going to work')
+    # def userprofile_receiver(sender, instance, created, *args, **kwargs):
+    #     if created:
+    #         userprofile = Doctor.objects.create(user=instance)
+    #
+    # post_save.connect(userprofile_receiver, sender=User)
+    # # @receiver(post_save, sender=User)
+    # # def create_user_profile(sender, instance, created, **kwargs):
+    # #     if created:
+    # #         BaseUser.objects.create(user=instance)
+    # #
+    # @receiver(post_save, sender=User)
+    # def save_user_profile(sender, instance, **kwargs):
+    #     instance.doctor.save()

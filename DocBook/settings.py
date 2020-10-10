@@ -12,14 +12,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '+7d1fysjucid6p0v=u8a%q++_6s-)75pbhv0icu-c@0@$3$69q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['herokutestm3dus2.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['docbook-backend.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
 
-INSTALLED_APPS = [
+INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -29,11 +29,19 @@ INSTALLED_APPS = [
     'hospital',
     'rest_framework',
     'django_extensions',
-]
+    # 'corsheaders',
+)
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'hospital.backends.JWTAuthentication',
+    )
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -111,7 +119,50 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
 AUTH_USER_MODEL = "hospital.User"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# JWT_AUTH = {
+#     'JWT_RESPONSE_PAYLOAD_HANDLER': 'hospital.utils.my_jwt_response_handler'
+# }
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',
+#     ),
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'hospital.backends.JWTAuthentication'
+#         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+#
+#     ),
+# }
+
+JWT_SECRET_KEY = 'qwerty12345678912345678'
+
+# CORS_ALLOWED_ORIGINS = [
+#
+#     'localhost:8000',
+# ]
+# CORS_ALLOW_METHODS = [
+# 'DELETE',
+# 'GET',
+# 'OPTIONS',
+# 'PATCH',
+# 'POST',
+# 'PUT',
+# ]
+# CORS_ALLOW_HEADERS = [
+# 'accept',
+# 'accept-encoding',
+# 'authorization',
+# 'content-type',
+# 'dnt',
+# 'origin',
+# 'user-agent',
+# 'x-csrftoken',
+# 'x-requested-with',
+# ]
+
