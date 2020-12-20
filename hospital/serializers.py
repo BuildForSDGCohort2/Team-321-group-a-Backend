@@ -1,11 +1,10 @@
-from rest_framework import serializers
-from .models import Hospital, User, Specialist,Appointment, Payment, Company, SpecialistType
+from .models import Hospital, User, Specialist, Appointment, Payment, Company, SpecialistType
 
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
-
-# from .models import BaseUser
 from .models import User
+
+
 # from rest_framework.authtoken.models import Token
 
 # class UserSerializer(serializers.ModelSerializer):
@@ -18,16 +17,14 @@ class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         max_length=65, min_length=8, write_only=True)
     email = serializers.EmailField(max_length=255, min_length=4),
-    # id = serializers.
-    # first_name = serializers.CharField(max_length=255, min_length=2)
-    # last_name = serializers.CharField(max_length=255, min_length=2)
 
     class Meta:
         model = User
-        fields = ['id','username',  'email', 'password', 'phone_number', 'user_type',
+        fields = ['id', 'username', 'email', 'password', 'phone_number', 'user_type',
                   ]
-# fields = ['username', 'first_name', 'last_name', 'email', 'password'
-#                   ]
+
+    # fields = ['username', 'first_name', 'last_name', 'email', 'password'
+    #                   ]
 
     def validate(self, attrs):
         email = attrs.get('email', '')
@@ -40,9 +37,7 @@ class UserSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**validated_data)
 
 
-
 class UserSerializerWithToken(serializers.ModelSerializer):
-
     token = serializers.SerializerMethodField()
     password = serializers.CharField(write_only=True)
 
@@ -66,6 +61,7 @@ class UserSerializerWithToken(serializers.ModelSerializer):
         model = User
         fields = ('token', 'username', 'password')
 
+
 class LoginSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         max_length=65, min_length=8, write_only=True)
@@ -74,18 +70,69 @@ class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'password']
+
+
 class AppointmentSerializer(serializers.ModelSerializer):
     # reschedule_startime = serializers.DateTimeField(read_only=True)
     # reschedule_endtime = serializers.DateTimeField(read_only=True)
     class Meta:
         model = Appointment
-        fields = ['specialist','user_name', 'day', 'start_time', 'end_time',
+        fields = ['specialist', 'user_name', 'day', 'start_time', 'end_time',
                   'Aim', 'alert',
                   ]
+
+
+class UserSerializer2(serializers.ModelSerializer):
+    class Meta:
+        models = Appointment
+        fields = '__all__'
+
+
 class SpecialistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Specialist
-        fields = ['id', 'user', 'hospital', 'description']
+        fields = ['user_id', 'hospital', 'description', 'profile_picture']
+        depth = 1
+        # read_only_fields = ['user']
 
 
+class HospitalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hospital
+        fields = ['name', 'Address']
 
+class UserSerializer3(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [ 'id', 'first_name', 'last_name','gender',  'phone_number'
+                         ]
+        read_only_fields = ['id']
+
+
+class SpecialistUpdateSerializer(serializers.ModelSerializer):
+    user = UserSerializer3(required=True)
+
+    class Meta:
+        model = Specialist
+        # read_ = ['user', ]
+        fields = ['user', 'hospital', 'description', 'profile_picture']
+        # read_only_fields = ['user']
+        # depth = 1
+
+    # def update(self, instance, validated_data):
+    #     nested_serializer = self.fields['user']
+    #     nested_instance = instance.user
+    #     nested_data = validated_data.pop('profile')
+    #     nested_serializer.update(nested_instance, nested_data)
+    #     return super(SpecialistUpdateSerializer, self).update(instance, validated_data)
+    # def update(self, instance, validated_data):
+    #     user_data = validated_data.pop('user')
+    #     user = UserSerializer.update(UserSerializer(), validated_data=user_data)
+    #     instance.user = validated_data.get(instance.user)
+    #     instance.hospital = validated_data.get('hospital', instance.hospital)
+    #     instance.description = validated_data.get('hospital', instance.description)
+    #     instance.profile_picture = validated_data.get('profile_picture', instance.profile_picture)
+    #     instance = super().update(instance, validated_data)
+    #     instance.save()
+    #     return instance

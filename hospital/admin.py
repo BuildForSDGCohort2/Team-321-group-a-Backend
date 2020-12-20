@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import User, Hospital, Specialist, Appointment, Payment, SpecialistType, Company, Wallet
+from .models import User, Hospital, Specialist, Appointment, Payment, SpecialistType, Company, Wallet, Patient
+
 
 # Register your models here.
 
@@ -9,10 +10,10 @@ from .models import User, Hospital, Specialist, Appointment, Payment, Specialist
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('username','first_name','last_name','date_of_birth','gender')
+    list_display = ('username','first_name','last_name','gender')
     search_fields = ('first_name',)
-    list_filter = ('date_of_birth',)
-    list_display_links = ('username', 'first_name', 'last_name','date_of_birth',)
+    # list_filter = ('date_of_birth',)
+    list_display_links = ('username', 'first_name', 'last_name',)
     #list_editable = ('date_of_birth', 'first_name','last_name',)
 admin.site.register(User, UserAdmin)
 
@@ -33,9 +34,9 @@ class SpecialistAdmin(admin.ModelAdmin):
 admin.site.register(Specialist, SpecialistAdmin)
 
 class HospitalAdmin(admin.ModelAdmin):
-    list_display = ('hospital_name','Address')
-    list_filter = ('hospital_name',)
-    search_fields = ('hospital_name',)
+    list_display = ('name','Address')
+    list_filter = ('name',)
+    search_fields = ('name',)
     list_editable = ('Address',)
 admin.site.register(Hospital, HospitalAdmin)
 
@@ -74,3 +75,5 @@ class WalletAdmin(admin.ModelAdmin):
         return obj.user.username
 
 admin.site.register(Wallet, WalletAdmin)
+admin.site.register(Patient)
+
